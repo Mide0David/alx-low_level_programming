@@ -2,7 +2,7 @@
 #include<unistd.h>
 
 /**
- * main - outputs to the stderr 
+ * main - outputs to the stder
  * Return: the value 1 if process is successful
  */
 int main(void)
