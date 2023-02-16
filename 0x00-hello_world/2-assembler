@@ -1,2 +1,2 @@
 #!/bin/bash
-gcc -s $CSFILE -o main.s
+gcc -s $CSFILE 
