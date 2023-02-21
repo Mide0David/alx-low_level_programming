@@ -1,20 +1,11 @@
-#include<stdio.h>
-#include"main.h"
+#include<unistd.h>
 
 /**
  * main - to output the word _putchar
  * Return: it returns zero if successful
  */
-int main(void)
+int _putchar(char c)
 {
-	char c[] = "_putchar";
-	int i = 0;
-
-	while (c[i] != '\0')
-	{
-		putchar(c[i]);
-		i++;
-	}
 	putchar('\n');
-	return (0);
+	return (write(1, &c, 1));
 }
