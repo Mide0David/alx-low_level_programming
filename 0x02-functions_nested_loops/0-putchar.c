@@ -1,11 +1,18 @@
-#include<unistd.h>
+#include "main.h"
 
 /**
- * _putchar - to output the word _putchar
- * @c: the char to output
- * Return: it returns zero if successful
+ * main - this outputs _putchar
+ * Return: it return 0 if successful
  */
-int _putchar(char c)
+int main(void)
 {
-	return (write(1, &c, 1));
+	char c[] = "_putchar";
+	int i;
+
+	for (i = 0; i != '\0'; i++)
+	{
+		_putchar(c[i]);
+	}
+	_putchar('\n');
+	return (0);
 }
