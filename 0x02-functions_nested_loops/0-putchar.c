@@ -3,7 +3,7 @@
 
 /**
  * main - to output the word _putchar
- * Reiturn: it returns zero if successful
+ * Return: it returns zero if successful
  */
 int main(void)
 {
