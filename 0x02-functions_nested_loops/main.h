@@ -1,6 +1,6 @@
 #ifndef MAIN_H
 #define MAIN_H
-
+void print_alphabet(void);
 void print_alphabet(void)
 {
 	char i;
@@ -9,6 +9,5 @@ void print_alphabet(void)
 	{
 		putchar(i);
 	}
-	return (0);
 }
 #endif
