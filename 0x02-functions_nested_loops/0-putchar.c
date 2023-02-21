@@ -3,7 +3,7 @@
 
 /**
  * main - to output the word _putchar
- * Return: it returns zero if successful
+ * Reiturn: it returns zero if successful
  */
 int main(void)
 {
@@ -13,6 +13,7 @@ int main(void)
 	while (c[i] != '\0')
 	{
 		putchar(c[i]);
+		putchar('\n');
 		i++;
 	}
 	return (0);
