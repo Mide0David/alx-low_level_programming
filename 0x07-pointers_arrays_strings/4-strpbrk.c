@@ -1,7 +1,7 @@
 #include "main.h"
 
 /**
- * _strpbrk - find the first occurrence in s 
+ * _strpbrk - find the first occurrence in s
  * of any charcters in the char array accept
  * @s: the string to check s for
  * @accept: the character to check in s
