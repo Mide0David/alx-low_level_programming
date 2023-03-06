@@ -1,4 +1,5 @@
 #include "main.h"
+#include <stddef.h>
 
 /**
  * _strchr - it return the first occurance of
@@ -17,7 +18,7 @@ char *_strchr(char *s, char c)
 	{
 		if (*ptr == c)
 		{
-			return (s);
+			return (ptr);
 		}
 		ptr++;
 	}
