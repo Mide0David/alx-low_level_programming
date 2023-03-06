@@ -19,12 +19,7 @@ unsigned int _strspn(char *s, char *accept)
 			if (*(s + i) == *(accept + j))
 			{
 				k++;
-				break;
 			}
-		}
-		if (*(accept + j) != '\0')
-		{
-			break;
 		}
 	}
 	return (k);
