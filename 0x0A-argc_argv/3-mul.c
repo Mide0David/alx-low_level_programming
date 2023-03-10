@@ -15,16 +15,17 @@ int main(int argc, char *argv[])
 
 	if (argc == 1)
 	{
-	printf("Error\n");
+		printf("Error\n");
+		return (1);
 	}
 	else
 	{
-	for (i = 1; i < argc; i++)
-	{
+		for (i = 1; i < argc; i++)
+		{
 		multiple *= atoi(argv[i]);
 
-	}
-	printf("%d\n", multiple);
+		}
+		printf("%d\n", multiple);
 
 	}
 	return (0);
