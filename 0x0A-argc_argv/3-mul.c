@@ -10,23 +10,19 @@
  */
 int main(int argc, char *argv[])
 {
-	int multiple = 1;
-	int i;
+	int n1 = 0, n2 = 0;
 
-	if (argc == 1)
+	if (argc == 3)
+	{
+		n1 = atoi(argv[1]);
+		n2 = atoi(argv[2]);
+		printf("%d\n", n1 * n2);
+	}
+	else
 	{
 		printf("Error\n");
 		return (1);
 	}
-	else
-	{
-		for (i = 1; i <= 2; i++)
-		{
-		multiple *= atoi(argv[i]);
 
-		}
-		printf("%d\n", multiple);
-
-	}
 	return (0);
 }
