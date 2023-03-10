@@ -7,12 +7,10 @@
  * @argv: hold the strings typed in the cl
  * Return: returns 0 if successful
  */
-
 int main(int argc, char *argv[])
 {
-	(void)argc;
+	(void)argv;
 
-	printf("%d\n", argv[0]);
-
+	printf("%d\n", argc - 1);
 	return (0);
 }
