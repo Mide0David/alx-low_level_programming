@@ -10,24 +10,24 @@
 
 char *_strdup(char *str)
 {
-	int i, j, sum = 0;
-	char *cpy;
+        int i, j, sum = 0;
+        char *cpy;
 
-	for (i = 0; *(str + i) != '\0'; i++)
-	{
-		sum++;
-	}
+        for (i = 0; *(str + i) != '\0'; i++)
+        {
+                sum++;
+        }
 
-	cpy = (char *) malloc(sum * sizeof(char));
+        cpy = (char *) malloc(sum * sizeof(char));
 
-	if (cpy == NULL)
-	{
-		return (NULL);
-	}
+        if (cpy == NULL)
+        {
+                return (NULL);
+        }
 
-	for (j = 0; j < sum; j++)
-	{
-		*(cpy + j) = *(str + j);
-	}
-	return (cpy);
+        for (j = 0; j < sum; j++)
+        {
+                *(cpy + j) = *(str + j);
+        }
+        return (cpy);
 }
