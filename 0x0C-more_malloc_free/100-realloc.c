@@ -1,55 +1,39 @@
+#include "notrebloh.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "main.h"
-
+#include <string.h>
 /**
- * _realloc - resizes an array to a new size
- * @ptr: the pointer to the array to resize
- * @old_size: the previous size of ptr
- * @new_size: the requested new size
- * Return: its returns the pointer of the array
- * with new size
+ * *_realloc - reallocate memory size function
+ * @ptr: pointer to address of old memory location
+ * @old_size: unsigned int type of old memory size
+ * @new_size: unsigned int type for new memory size
+ * Return:  return pointer to array
  */
 
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
 {
-	unsigned int i;
-	void *nw_ptr;
-	char *src;
-	char *dest;
+	char *s;
 
-	if (new_size <= old_size)
+	if (new_size > old_size)
+	{
+		s = malloc(new_size);
+		free(ptr);
+		return (s);
+	}
+	if (new_size == old_size)
 	{
 		return (ptr);
 	}
-	if (new_size == 0 && ptr != NULL)
-	{
-		return (NULL);
-	}
-
 	if (ptr == NULL)
 	{
-		nw_ptr = malloc(new_size);
-
-		if (nw_ptr == NULL)
-		{
-			return (NULL);
-		}
+		s = malloc(new_size);
+		free(ptr);
+		return (s);
 	}
-	nw_ptr = malloc(new_size);
-	if (nw_ptr == NULL)
+	if (new_size == 0 && ptr != NULL)
 	{
+		free(ptr);
 		return (NULL);
 	}
-
-	src = (char *)ptr;
-	dest = (char *)nw_ptr;
-	for (i = 0; i < new_size; i++)
-	{
-		dest[i] = src[i];
-	}
-
-	free(ptr);
-
-	return (nw_ptr);
+	return (ptr);
 }
