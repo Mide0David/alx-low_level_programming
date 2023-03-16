@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <stdlib.h>
+j#include <stdlib.h>
 #include "main.h"
 
 /**
@@ -29,7 +29,7 @@ void *_calloc(unsigned int nmemb, unsigned int size)
 	}
 
 	char_ptr = (char *)ptr;
-	for (i = 0; i < nmemb; i++)
+	for (i = 0; i < nmemb * size; i++)
 	{
 		char_ptr[i] = 0;
 	}
