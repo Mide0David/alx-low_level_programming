@@ -5,7 +5,7 @@
 /**
  * print_listint - printout all the elements in the list
  * @h: the pointer to the head of the list
- * Returns: returns the number of nodes
+ * Return: returns the number of nodes
  *
  */
 
