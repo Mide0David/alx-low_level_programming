@@ -19,7 +19,7 @@ void free_listint2(listint_t **head)
 
 	while (delete != NULL)
 	{
-		following = delete->next;
+		following = (delete)->next;
 
 		free(delete);
 		delete = following;
