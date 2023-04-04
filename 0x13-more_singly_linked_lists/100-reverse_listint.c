@@ -3,7 +3,7 @@
 /**
  * reverse_listint - reverses the linked list
  * @head: pointer to the first node in the list
- * Return: returns the pointer to the new first node 
+ * Return: returns the pointer to the new first node
  * after the reverse
  */
 
