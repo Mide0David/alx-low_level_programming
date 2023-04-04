@@ -9,39 +9,31 @@
 
 size_t print_listint_safe(const listint_t *head)
 {
-	const listint_t *current = head;
-	size_t count = 0;
-	const size_t MAX_NODES = 1024;
-	const listint_t **nodes = malloc(MAX_NODES * sizeof(listint_t *));
+	const listint_t *current = head, *following = head;
 
-	if (nodes == NULL)
+	size_t count = 0;
+
+	while (current != NULL && following != NULL && following->next != NULL)
 	{
-		exit(98);
+		printf("[%p] %d\n", (void *)current, current->n);
+		count++;
+
+		current = current->next;
+		following = following->next->next;
+
+		if (current == following)
+		{
+			printf("->[%p] %d\n", (void *)current, current->n);
+			count++;
+			return (count);
+		}
 	}
 
 	while (current != NULL)
 	{
-		size_t i;
-
-		for (i = 0; i < count; i++)
-		{
-			if (nodes[i] == current)
-			{
-				printf("->[%p] %d\n", (void *)current, current->n);
-				free(nodes);
-				return (count);
-			}
-		}
-		if (count == MAX_NODES)
-		{
-			free(nodes);
-			exit(98);
-		}
-		nodes[count] = current;
 		printf("[%p] %d\n", (void *)current, current->n);
-		current = current->next;
 		count++;
+		current = current->next;
 	}
-	free(nodes);
 	return (count);
 }
