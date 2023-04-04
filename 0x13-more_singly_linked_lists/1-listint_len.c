@@ -21,7 +21,6 @@ size_t listint_len(const listint_t *h)
 	while (temp != NULL)
 	{
 
-		printf("%d\n", temp->n);
 		temp = temp->next;
 		count++;
 	}
