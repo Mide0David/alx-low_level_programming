@@ -3,7 +3,7 @@
 /**
  * find_listint_loop - finds the loop in a linked list
  * @head: the pointer to the first node in the list
- * Return: returns the address of the node where the loops 
+ * Return: returns the address of the node where the loops
  * start
  */
 
