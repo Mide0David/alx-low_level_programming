@@ -1,7 +1,9 @@
 #include <stdio.h>
 
 /**
- *
+ * get_bit - returns the value of a bit at a given index
+ * @n: the bit to check
+ * @index: index starting from the bit you want to get
  *
  */
 
