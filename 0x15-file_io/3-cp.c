@@ -1,10 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
-#include <unistd.h>
-#include "main.h"
 
 /**
  * error - prints an error message to the standard error
@@ -13,90 +11,95 @@
  * @exit_code: An integer representing the exit code to exit the
  * program with
  */
-
 void error(char *message, int exit_code)
 {
 	dprintf(STDERR_FILENO, "%s\n", message);
 	exit(exit_code);
 }
-/**
- * close_file - closes a file descriptor and exits the program with
- * an error code if an error occurs
- * @fd: An integer representing the file descriptor to close
- * the file descriptor
- */
-
-void close_file(int fd)
-{
-	if (close(fd) == -1)
-	{
-		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd);
-		exit(100);
-	}
-}
 
 /**
- * open_file - opens a file and exits the program with an error code
- * if an error occurs
- * @filename: A string representing the name of the file to open
- * @flags:  An integer representing the flags to use when opening the file
- * @mode: A mode_t representing the permissions to set on the file
- * if it is created
- * Return: returns file discriptor if successful
+ * open_file_to_read - opens a file for reading and returns the
+ * corresponding file descriptor
+ * @filename: A string containing the name of the file to open
+ *
+ * Return: The file descriptor of the opened file
  */
-
-int open_file(char *filename, int flags, mode_t mode)
+int open_file_to_read(char *filename)
 {
-	int fd = open(filename, flags, mode);
+	int fd;
+
+	fd = open(filename, O_RDONLY);
 
 	if (fd == -1)
 	{
-		char message[100];
-
-		sprintf(message, "Error: Can't open file %s", filename);
-		perror(message);
-		exit(98);
+		error("Error: Can't read from file", 98);
 	}
+		return (fd);
+}
+
+/**
+ * open_file_to_write - opens a file for writing and returns the
+ * corresponding file descriptor
+ * @filename: A string containing the name of the file to open
+ *
+ * Return: The file descriptor of the opened file
+ */
+int open_file_to_write(char *filename)
+{
+	int fd;
+
+	fd = open(filename, O_CREAT | O_TRUNC | O_WRONLY, 0664);
+	if (fd == -1)
+	error("Error: Can't write to file", 99);
 	return (fd);
 }
 
+/**
+ * copy_file - copies the contents of one file to another file
+ * @fd_from: The file descriptor of the file to copy from
+ * @fd_to: The file descriptor of the file to copy to
+ *
+ * Return: void
+ */
+void copy_file(int fd_from, int fd_to)
+{
+	char buf[1024];
+	ssize_t n;
+
+	while ((n = read(fd_from, buf, sizeof(buf))) > 0)
+	{
+		if (write(fd_to, buf, n) != n)
+		error("Error: Can't write to file", 99);
+	}
+
+	if (n == -1)
+		error("Error: Can't read from file", 98);
+}
 
 /**
- * main - copies content of a file to another file
- * @argc: count the number of word typed in an the CL
- * @argv: stores the string typed in the CL
- * Return: returns 0 if successful
+ * main - copies the content of a file to another file.
+ * @argc: The number of arguments passed to the program
+ * @argv: An array of strings containing the arguments passed to
+ * the program
+ *
+ * Return: 0 on success, or a non-zero integer on failure
  */
-
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
 	int fd_from, fd_to;
-	char buffer[BUFFER_SIZE];
-	ssize_t read_bytes, write_bytes;
 
 	if (argc != 3)
-	{
-		error("Usage: cp file_from file_to", 97);
-	}
+	error("Usage: cp file_from file_to", 97);
 
-	fd_from = open_file(argv[1], O_RDONLY, 0);
-	fd_to = open_file(argv[2], O_WRONLY | O_CREAT | O_TRUNC, 0664);
+	fd_from = open_file_to_read(argv[1]);
+	fd_to = open_file_to_write(argv[2]);
 
-	while ((read_bytes = read(fd_from, buffer, BUFFER_SIZE)) > 0)
-	{
-		write_bytes = write(fd_to, buffer, read_bytes);
-		if (write_bytes == -1 || write_bytes != read_bytes)
-		{
-			error("Error: Can't write to file", 99);
-		}
-	}
-	if (read_bytes == -1)
-	{
-		error("Error: Can't read from file", 98);
-	}
+	copy_file(fd_from, fd_to);
 
-	close_file(fd_from);
-	close_file(fd_to);
+	if (close(fd_from) == -1)
+	error("Error: Can't close fd", 100);
+	if (close(fd_to) == -1)
+	error("Error: Can't close fd", 100);
 
 	return (0);
 }
