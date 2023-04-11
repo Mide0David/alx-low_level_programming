@@ -1,54 +1,102 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <unistd.h>
 #include "main.h"
 
 /**
- * main - copies the content of a file to another file.
- * @argc: The number of arguments passed to the program
- * @argv: An array of strings containing the arguments passed to
- * the program
- *
- * Return: 0 on success, or a non-zero integer on failure
+ * error - prints an error message to the standard error
+ * and exits the program with a specified exit code.
+ * @message: A string containing the error message to print
+ * @exit_code: An integer representing the exit code to exit the
+ * program with
  */
+
+void error(char *message, int exit_code)
+{
+	dprintf(STDERR_FILENO, "%s\n", message);
+	exit(exit_code);
+}
+/**
+ * close_file - closes a file descriptor and exits the program with
+ * an error code if an error occurs
+ * @fd: An integer representing the file descriptor to close
+ * the file descriptor
+ */
+
+void close_file(int fd)
+{
+	if (close(fd) == -1)
+	{
+		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd);
+		exit(100);
+	}
+}
+
+/**
+ * open_file - opens a file and exits the program with an error code
+ * if an error occurs
+ * @filename: A string representing the name of the file to open
+ * @flags:  An integer representing the flags to use when opening the file
+ * @mode: A mode_t representing the permissions to set on the file
+ * if it is created
+ * Return: returns file discriptor if successful
+ */
+
+int open_file(char *filename, int flags, mode_t mode)
+{
+	int fd = open(filename, flags, mode);
+
+	if (fd == -1)
+	{
+		char message[100];
+
+		sprintf(message, "Error: Can't open file %s", filename);
+		perror(message);
+		exit(98);
+	}
+	return (fd);
+}
+
+
+/**
+ * main - copies content of a file to another file
+ * @argc: count the number of word typed in an the CL
+ * @argv: stores the string typed in the CL
+ * Return: returns 0 if successful
+ */
+
 int main(int argc, char *argv[])
 {
-	FILE *in_file = fopen(argv[1], "rb");
-	FILE *out_file = fopen(argv[2], "wb");
+	int fd_from, fd_to;
 	char buffer[BUFFER_SIZE];
-	size_t bytes_read;
-
+	ssize_t read_bytes, write_bytes;
 
 	if (argc != 3)
 	{
-		fprintf(stderr, "Usage: %s file_from file_to\n", argv[0]);
-		exit(1);
+		error("Usage: cp file_from file_to", 97);
 	}
 
-	in_file = fopen(argv[1], "rb");
-	if (!in_file)
-	{
-		fprintf(stderr, "Error: Can't open file %s for reading\n", argv[1]);
-		exit(1);
-	}
+	fd_from = open_file(argv[1], O_RDONLY, 0);
+	fd_to = open_file(argv[2], O_WRONLY | O_CREAT | O_TRUNC, 0664);
 
-	out_file = fopen(argv[2], "wb");
-	if (!out_file)
+	while ((read_bytes = read(fd_from, buffer, BUFFER_SIZE)) > 0)
 	{
-		fprintf(stderr, "Error: Can't open file %s for writing\n", argv[2]);
-		fclose(in_file);
-		exit(1);
-	}
-	while ((bytes_read = fread(buffer, 1, BUFFER_SIZE, in_file)) > 0)
-	{
-		if (fwrite(buffer, 1, bytes_read, out_file) != bytes_read)
+		write_bytes = write(fd_to, buffer, read_bytes);
+		if (write_bytes == -1 || write_bytes != read_bytes)
 		{
-			fprintf(stderr, "Error: Can't write to file %s\n", argv[2]);
-			fclose(in_file);
-			fclose(out_file);
-			exit(1);
+			error("Error: Can't write to file", 99);
 		}
 	}
-	fclose(in_file);
-	fclose(out_file);
-	return 0;
+	if (read_bytes == -1)
+	{
+		error("Error: Can't read from file", 98);
+	}
+
+	close_file(fd_from);
+	close_file(fd_to);
+
+	return (0);
 }
