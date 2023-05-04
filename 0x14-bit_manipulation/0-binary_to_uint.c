@@ -1,31 +1,25 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include "main.h"
 
-int square(const int a, const int b);
 /**
- * binary_to_uint - converts a binary number to an unsigned int
- * @b: points to a string of 0 and 1 charcters
- * Return: returns the converted unsigned number
+ * binary_to_uint - convert form binary to unsigned
+ * int
+ * @b: the binary num to convert
+ * Return: returns the converted number
  *
  */
 unsigned int binary_to_uint(const char *b)
 {
-	unsigned int conv = 0;
-	const char *temp = b;
+	unsigned int position = 0;
 
-	if (b == NULL)
+	while (*b != '\0')
 	{
-		return (0);
-	}
-	while (*temp != '\0')
-	{
-		if (*temp != '1' && *temp != '0')
+		position <<= 1;
+		if (*b == '1')
 		{
-			return (0);
+			position += 1;
 		}
-
-		conv = conv * 2 + (*temp - '0');
-		++temp;
+		b++;
 	}
-	return (conv);
+	return (position);
 }
