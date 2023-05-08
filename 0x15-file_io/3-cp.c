@@ -1,7 +1,12 @@
 #include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <errno.h>
+#include <stdlib.h>
 #include <stdlib.h>
 #include "main.h"
 
+#define BUF_SIZE 1024
 /**
  * main - copies the content of a file to another file.
  * @argc: The number of arguments passed to the program
@@ -12,43 +17,52 @@
  */
 int main(int argc, char *argv[])
 {
-	FILE *in_file = fopen(argv[1], "rb");
-	FILE *out_file = fopen(argv[2], "wb");
-	char buffer[BUFFER_SIZE];
-	size_t bytes_read;
-
+	int fd, fd_value;
+	mode_t permissions;
+	ssize_t nread;
+	char *buffer = malloc(sizeof(char) * BUF_SIZE);
 
 	if (argc != 3)
 	{
-		fprintf(stderr, "Usage: %s file_from file_to\n", argv[0]);
-		exit(1);
+		dprintf(STDERR_FILENO, "Usage: cp file_from file_to\n");
+		exit(97);
 	}
-
-	in_file = fopen(argv[1], "rb");
-	if (!in_file)
+	fd = open(argv[1], O_RDONLY);
+	if ((fd == -1 && errno == ENOENT) || (fd == -1 && errno == EACCES))
 	{
-		fprintf(stderr, "Error: Can't open file %s for reading\n", argv[1]);
-		exit(1);
+		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
+		exit(98);
 	}
-
-	out_file = fopen(argv[2], "wb");
-	if (!out_file)
+	permissions = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH;
+	fd_value = open(argv[2], O_RDWR | O_CREAT | O_TRUNC, permissions);
+	if (fd_value == -1)
 	{
-		fprintf(stderr, "Error: Can't open file %s for writing\n", argv[2]);
-		fclose(in_file);
-		exit(1);
+		dprintf(STDERR_FILENO, "Error: Can't read from %s\n", argv[2]);
+		exit(99);
 	}
-	while ((bytes_read = fread(buffer, 1, BUFFER_SIZE, in_file)) > 0)
+	while (nread > 0)
 	{
-		if (fwrite(buffer, 1, bytes_read, out_file) != bytes_read)
+		nread = read(fd, buffer, BUF_SIZE);
+		if (write(fd_value, buffer, nread) != nread)
 		{
-			fprintf(stderr, "Error: Can't write to file %s\n", argv[2]);
-			fclose(in_file);
-			fclose(out_file);
-			exit(1);
+			dprintf(STDERR_FILENO, "Error: Can't write to %s\n", argv[2]);
+			exit(98);			
 		}
 	}
-	fclose(in_file);
-	fclose(out_file);
-	return 0;
+	if (nread == -1)
+	{
+		dprintf(STDERR_FILENO, "Error: Can't read form file %s\n", argv[1]);
+		exit(98);
+	}
+	if (close(fd) == -1)
+	{
+		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd);
+		exit(100);
+	}
+	if (close(fd_value) == -1)
+	{
+		dprintf(STDERR_FILENO, "Error: Can't close fd %d", fd_value);
+		exit(100);
+	}
+	return (0);
 }
