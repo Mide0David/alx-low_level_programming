@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
 		exit(97);
 	}
 	fd = open(argv[1], O_RDONLY);
-	if ((fd == -1 && errno == ENOENT) || (fd == -1 && errno == EACCES))
+	if ((fd == -1)
 	{
 		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
 		exit(98);
