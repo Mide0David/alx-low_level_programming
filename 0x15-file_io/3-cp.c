@@ -20,6 +20,7 @@ int main(int argc, char *argv[])
 	int fd, fd_value;
 	mode_t permissions;
 	ssize_t nread;
+	ssize_t nwrite;
 	char *buffer = malloc(sizeof(char) * BUF_SIZE);
 
 	if (argc != 3)
@@ -37,13 +38,14 @@ int main(int argc, char *argv[])
 	fd_value = open(argv[2], O_RDWR | O_CREAT | O_TRUNC, permissions);
 	if (fd_value == -1)
 	{
-		dprintf(STDERR_FILENO, "Error: Can't read from %s\n", argv[2]);
+		dprintf(STDERR_FILENO, "Error: Can't write from %s\n", argv[2]);
 		exit(99);
 	}
 	while (nread > 0)
 	{
 		nread = read(fd, buffer, BUF_SIZE);
-		if (write(fd_value, buffer, nread) != nread)
+		nwrite = write(fd_value, buffer, nread);
+		if (nwrite != nread || nwrite == -1)
 		{
 			dprintf(STDERR_FILENO, "Error: Can't write to %s\n", argv[2]);
 			exit(98);			
