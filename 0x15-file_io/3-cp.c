@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 		if (nwrite != nread || nwrite == -1)
 		{
 			dprintf(STDERR_FILENO, "Error: Can't write to %s\n", argv[2]);
-			exit(98);			
+			exit(99);			
 		}
 	}
 	if (nread == -1)
